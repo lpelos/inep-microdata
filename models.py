@@ -11,18 +11,19 @@ class Year(EmbeddedDocument):
     fields = ListField(EmbeddedDocumentField(Field))
 
 class State(Document):
-    id = StringField(required=True)
-    name = StringField(required=True, max_length=50)
+    code = StringField(required=True)
+    acronym = StringField(required=True, max_length=50)
     years = ListField(EmbeddedDocumentField(Year))
 
 class City(Document):
-    id = StringField(required=True)
+    code = StringField(required=True)
     name = StringField(required=True, max_length=50)
     state = ReferenceField(State)
     years = ListField(EmbeddedDocumentField(Year))
 
 class School(Document):
-    id = StringField(required=True)
-    name = StringField(required=True, max_length=50)
+    code = StringField(required=True)
+    name = StringField(required=True, max_length=100)
     city = ReferenceField(City)
+    state = ReferenceField(State)
     years = ListField(EmbeddedDocumentField(Year))
