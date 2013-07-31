@@ -1,0 +1,41 @@
+{% extends "histograms/layout.jinja2" %}
+
+{% block title %}
+  {{ score_sheet.year }} - {{ institution.name }}
+{% endblock %}
+
+{% block content %}
+
+<h1>Histogramas - Enem - {{ score_sheet.year }} - {{ institution.name }}</h1>
+
+<table border="1">
+  <caption>Ciências da Natureza</caption>
+  <thead>
+    <tr>
+      <th>0-99</th>
+      <th>100-199</th>
+      <th>200-299</th>
+      <th>300-399</th>
+      <th>400-499</th>
+      <th>500-599</th>
+      <th>600-699</th>
+      <th>700-799</th>
+      <th>800-899</th>
+      <th>900-1000</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>{{ score_sheet.cn[0] }}</td>
+    <td>{{ score_sheet.cn[1] }}</td>
+    <td>{{ score_sheet.cn[2] }}</td>
+    <td>{{ score_sheet.cn[3] }}</td>
+    <td>{{ score_sheet.cn[4] }}</td>
+    <td>{{ score_sheet.cn[5] }}</td>
+    <td>{{ score_sheet.cn[6] }}</td>
+    <td>{{ score_sheet.cn[7] }}</td>
+    <td>{{ score_sheet.cn[8] }}</td>
+    <td>{{ score_sheet.cn[9] }}</td>
+  </tr>
+</table>
+
+{% endblock %}
