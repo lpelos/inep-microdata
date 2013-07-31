@@ -48,23 +48,20 @@ with open("static/data/enem_cidade_sao_paulo.txt") as f:
     for line in f:
         data = parse(line)
 
+        state = State.objects.get_or_create(code=data["state"]["code"],
+            defaults={"acronym": data["state"]["acronym"]})[0]
+
+        city = City.objects.get_or_create(code=data["city"]["code"],
+            defaults={ "name": data["city"]["name"], "state": state})[0]
+
+        school = School.objects(code=data["school"]["code"]).first()
+
         for field in data["score"].keys():
             try:
                 score = int(float(data["score"][field]))
 
-                state = State.objects.get_or_create(
-                    code=data["state"]["code"],
-                    defaults={
-                        "acronym": data["state"]["acronym"]})[0]
                 add_score(state, field, score)
-
-                city = City.objects.get_or_create(code=data["city"]["code"],
-                    defaults={
-                        "name": data["city"]["name"],
-                        "state": state})[0]
                 add_score(city, field, score)
-
-                school = School.objects(code=data["school"]["code"]).first()
                 if school: add_score(school, field, score)
 
             except ValueError: pass
