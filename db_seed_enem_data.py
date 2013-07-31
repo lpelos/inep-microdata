@@ -3,16 +3,19 @@ from models import *
 def add_score(ref, field, score):
   score_sheet = ScoreSheet.objects.get_or_create(year=year, ref=ref)[0]
 
+  score_range = int(score / 100)
+  if score_range > 9: score_range = 9
+
   if not score_sheet.fields.get(field):
       score_sheet.fields[field] = [0 for n in xrange(0, 10)]
 
-  score_range = int(score / 100)
   score_sheet.fields[field][score_range] += 1
+  score_sheet.save()
 
 
 def parse(line_data):
     return {
-      "school": { "code": line_data[203:210] },
+      "school": { "code": line_data[203:211] },
       "city": {
         "code": line_data[211:218],
         "name": line_data[218:318].strip()
@@ -38,9 +41,11 @@ with open("static/data/enem_cidade_sao_paulo.txt") as f:
     f.seek(12)
     year = int(f.read(4))
 
+    ScoreSheet.objects(year=year).delete()
+
     f.seek(0)
     print("0%..")
-    for line in list(f)[:10000]:
+    for line in f:
         data = parse(line)
 
         for field in data["score"].keys():
