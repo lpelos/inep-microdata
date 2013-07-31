@@ -8,9 +8,25 @@
 
 <h1>Histogramas - Enem - {{ score_sheet.year }} - {{ institution.name }}</h1>
 
-<table border="1">
-  <caption>Ciências da Natureza</caption>
-  <thead>
+<style type="text/css">
+  .table { margin-bottom: 50px; }
+  .table td { vertical-align: bottom !important; text-align: center }
+  .bar { background-color: blue; width: 100% }
+</style>
+
+
+{% for field in ["cn", "ch", "lc", "mt"] %}
+  <table class="table">
+    <caption>{{field}}</caption>
+    <tr>
+      {% for score_range in score_sheet[field] %}
+        <td><div class="bar" style="height: {{ score_range / 100 }}px"></td>
+      {% endfor %}
+    <tr>
+      {% for score_range in score_sheet[field] %}
+        <td>{{ score_range }}</td>
+      {% endfor %}
+    </tr>
     <tr>
       <th>0-99</th>
       <th>100-199</th>
@@ -23,19 +39,7 @@
       <th>800-899</th>
       <th>900-1000</th>
     </tr>
-  </thead>
-  <tr>
-    <td>{{ score_sheet.cn[0] }}</td>
-    <td>{{ score_sheet.cn[1] }}</td>
-    <td>{{ score_sheet.cn[2] }}</td>
-    <td>{{ score_sheet.cn[3] }}</td>
-    <td>{{ score_sheet.cn[4] }}</td>
-    <td>{{ score_sheet.cn[5] }}</td>
-    <td>{{ score_sheet.cn[6] }}</td>
-    <td>{{ score_sheet.cn[7] }}</td>
-    <td>{{ score_sheet.cn[8] }}</td>
-    <td>{{ score_sheet.cn[9] }}</td>
-  </tr>
-</table>
+  </table>
+{% endfor %}
 
 {% endblock %}
