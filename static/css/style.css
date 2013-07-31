@@ -1,0 +1,17 @@
+
+h1, .city-selector {
+  margin: 40px 0 50px;
+  text-align: center;
+}
+
+.graphic {
+  width: 100%;
+}
+
+@media (min-width: 800px) {
+  .graphic {
+    float: left;
+    margin: 0 2% 50px 0;
+    width: 48%;
+  }  
+}

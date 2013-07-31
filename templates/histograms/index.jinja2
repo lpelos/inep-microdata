@@ -1,0 +1,42 @@
+<html ng-app="inepMicrodata">
+
+<head>
+  <title>Histogramas - Enem - {{city.name}} / {{city.state}}</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <script type="text/javascript" src="http://code.angularjs.org/1.0.7/angular-resource.min.js"></script>
+  <script type="text/javascript" src="/static/js/main.js"></script>
+  <script type="text/javascript" src="/static/js/services/score_sheet.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/histograms_controller.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+
+<body ng-controller="histogramsCtrl">
+
+<h1>Histogramas - Enem - {{city.name}} / {{city.state}}</h1>
+
+<div class="city-selector">
+  <label for="select_city">Escolha sua cidade</label>
+  <select id="select_city" ng-model="chosenCity" ng-change="getScores()">
+    <option value="">Selecione sua escola</option>
+    {% for school in schools %}
+      <option value="{{school.code}}">{{school.name}}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<section id="graphics">
+
+  <p>{{ "{{error}}" }}</p>
+
+  <div id="ch" class="graphic" ng-show="school.ch.length"></div>
+  <div id="cn" class="graphic" ng-show="school.cn.length"></div>
+  <div id="lc" class="graphic" ng-show="school.lc.length"></div>
+  <div id="mt" class="graphic" ng-show="school.mt.length"></div>
+
+</section>
+
+</body>
+</html>
