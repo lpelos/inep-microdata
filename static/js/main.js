@@ -1,1 +1,0 @@
-inepMicrodataApp = angular.module("inepMicrodata", ["ngResource"]);

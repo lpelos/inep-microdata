@@ -1,6 +1,15 @@
-
 h1, .city-selector {
   margin: 40px 0 50px;
+  text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.error, .loader {
+  display: block;
+  margin: 0 auto;
   text-align: center;
 }
 
