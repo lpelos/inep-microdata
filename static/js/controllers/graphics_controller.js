@@ -42,6 +42,7 @@ inepMicrodataApp.controller("graphicsCtrl", ["$scope", "$routeParams", "ScoreShe
       },
       yAxis: {
         min: 0,
+        max: 100,
         title: {
           text: "percentual"
         }
