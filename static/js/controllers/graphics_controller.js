@@ -22,11 +22,6 @@ inepMicrodataApp.controller("graphicsCtrl", ["$scope", "$routeParams", "ScoreShe
   };
 
   function generateGraphic(field) {
-    var values = [];
-    for (var i = 0; i < $scope.school[field].length; i++) {
-      values.push({y: $scope.school[field][i]})
-    }
-
     $("#" + field + ".graphic").highcharts({
       chart: {
         type: 'column'
@@ -52,27 +47,25 @@ inepMicrodataApp.controller("graphicsCtrl", ["$scope", "$routeParams", "ScoreShe
         }
       },
       series: [
-        { 
+        {
           name: $scope.schoolName,
-          data: $scope.school[field]
+          data: $scope.school.relative[field]
         },
-        { 
+        {
           name: "Cidade",
-          data: $scope.city[field]
+          data: $scope.city.relative[field]
         },
-        { 
+        {
           name: "Estado",
-          data: $scope.state[field]
+          data: $scope.state.relative[field]
         }
       ]
-    });    
+    });
   }
 
   function printGraphics() {
-    for (var field in $scope.school) {
-      (function(field) {
-        generateGraphic(field);
-      })(field)
+    for (var field in $scope.school.absolute) {
+      generateGraphic(field);
     }
   };
 

@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    return redirect("/histogramas/")
+    return redirect("/histogramas/sp/cidades/3550308")
 
 
 @app.route('/histograms/<state_acronym>/cities/<city_code>', methods=["GET"])
@@ -28,9 +28,24 @@ def histograms_school(school_code, year=2011):
         city = school.city
         state = school.state
 
-        school_scores = ScoreSheet.objects.get(year=year, ref=school).fields
-        city_scores = ScoreSheet.objects.get(year=year, ref=city).fields
-        state_scores = ScoreSheet.objects.get(year=year, ref=state).fields
+        def scores_obj(fields):
+            score_obj = {"absolute": fields, "relative": {}}
+
+            for field in fields:
+                total = sum(fields[field])
+                score_obj["relative"][field] = [score*100/total for score in fields[field]]
+
+            return score_obj
+
+        school_scores = scores_obj(ScoreSheet.objects.get(
+            year=year, ref=school).fields)
+
+        city_scores = scores_obj(ScoreSheet.objects.get(
+            year=year, ref=city).fields)
+        
+        state_scores = scores_obj(ScoreSheet.objects.get(
+            year=year, ref=state).fields)
+
 
         return jsonify({
             "year": year,
