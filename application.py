@@ -20,8 +20,7 @@ def histograms(year=2011, state_acronym="SP", city_code="3550308"):
         city={"name": city.name, "state":city.state.acronym}, schools=schools)
 
 
-@app.route('/histograms/<int:year>/escolas/<school_code>', methods=["GET"])
-@app.route('/histograms/<int:year>/schools/<school_code>', methods=["GET"])
+@app.route('/api/histograms/<int:year>/schools/<school_code>', methods=["GET"])
 def histograms_school(school_code, year=2011):
     try:
         school = School.objects.get(code=school_code)
