@@ -8,7 +8,11 @@ inepMicrodataApp.controller("histogramsCtrl", ["$scope", "$location", function($
   }
 
   $scope.changeCity = function() {
-    $location.path("/escolas/" + $scope.chosenCity);
+    if ($scope.chosenCity) {
+      $location.path("/escolas/" + $scope.chosenCity);
+    } else {
+      $location.path("/");
+    }
   }
 
   $scope.resetInstitutions = function() {
