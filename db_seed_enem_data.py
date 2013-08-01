@@ -1,16 +1,27 @@
 from models import *
 
-def add_score(ref, field, score):
-  score_sheet = ScoreSheet.objects.get_or_create(year=year, ref=ref)[0]
 
+def add_score(score_sheet, field, score):
   score_range = int(score / 100)
   if score_range > 9: score_range = 9
-
-  if not score_sheet.fields.get(field):
-      score_sheet.fields[field] = [0 for n in xrange(0, 10)]
-
   score_sheet.fields[field][score_range] += 1
-  score_sheet.save()
+
+def clear_score_count(year):
+    year_key = "score_sheets__%s__exists" % year
+
+    collections = [State, City, School]
+    for institution in collections:
+        for institution in institution.objects(**{year_key: True}):
+            institution.score_sheets.clear()
+
+def get_or_create_score_sheet(institution, year, fields):
+    if not institution.score_sheets.get(year):
+        institution.score_sheets[year] = ScoreSheet()
+
+        for field in fields:
+            institution.score_sheets[year].fields[field] = [0 for n in xrange(0, 10)]
+
+    return institution.score_sheets[year]
 
 
 def parse(line_data):
@@ -36,12 +47,15 @@ def parse(line_data):
 with open("static/data/enem_cidade_sao_paulo.txt") as f:
     count = 0
     total_lines = len(list(f))
-    print("total de linhas a serem lidas: %i" % total_lines)
 
     f.seek(12)
-    year = int(f.read(4))
+    year = f.read(4)
 
-    ScoreSheet.objects(year=year).delete()
+    print("Limpando contagem de notas de %s..." % year)
+    clear_score_count(year)
+    print("... pronto")
+    print("")
+    print("total de linhas a serem lidas: %i" % total_lines)
 
     f.seek(0)
     print("0%..")
@@ -54,20 +68,28 @@ with open("static/data/enem_cidade_sao_paulo.txt") as f:
         city = City.objects.get_or_create(code=data["city"]["code"],
             defaults={ "name": data["city"]["name"], "state": state})[0]
 
-        school = School.objects(code=data["school"]["code"]).first()
+        institutions = [state, city]
+        try:
+            school = School.objects.get(code=data["school"]["code"])
+            institutions.append(school)
+        except: pass
 
-        for field in data["score"].keys():
-            try:
-                score = int(float(data["score"][field]))
+        fields = data["score"].keys()
+        for institution in institutions:
+            score_sheet = get_or_create_score_sheet(institution, year, fields)
 
-                add_score(state, field, score)
-                add_score(city, field, score)
-                if school: add_score(school, field, score)
+            for field in data["score"].keys():
+                try:
+                    score = int(float(data["score"][field]))
+                    add_score(score_sheet, field, score)
 
-            except ValueError: pass
+                except ValueError: pass
+
+            institution.save()
+
 
         count += 1
-        if count % 500 is 0:
-            print("..%s%%.." % str(float(count)*100.00/float(total_lines)))
+        if count % 1000 is 0:
+            print("..%s%%.." % str(count*100/total_lines))
 
     print("..100%")
