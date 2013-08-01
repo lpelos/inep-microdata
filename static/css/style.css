@@ -1,6 +1,14 @@
-h1, .city-selector {
-  margin: 40px 0 50px;
+h1, h2, .city-selector {
+  margin: 0.8em 0;
   text-align: center;
+}
+
+#select_city, #s2id_select_city {
+  width: 650px;
+}
+
+.city-selector {
+  margin-bottom: 50px;
 }
 
 .error {
