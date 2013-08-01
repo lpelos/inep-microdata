@@ -17,8 +17,7 @@ def histograms(state_acronym="SP", city_code="3550308"):
     schools = School.objects(
         city=city, score_sheets__exists=True).order_by('name')
 
-    schools_index = [{"code": school.code, "name": school.name}
-        for school in schools]
+    schools_index = {str(school.name): str(school.code) for school in schools}
 
     return render_template("histograms/index.jinja2",
         city={"name": city.name, "state":city.state.acronym},

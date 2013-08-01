@@ -1,5 +1,18 @@
 inepMicrodataApp.controller("histogramsCtrl", ["$scope", "$location", function($scope, $location) {
-  
+  $scope.schools = schools;
+
+  $scope.selectedSchool = null;
+  $scope.$watch("selectedSchool", function() {
+    if ($scope.schools[$scope.selectedSchool]) {
+      $scope.changeSchool($scope.schools[$scope.selectedSchool]);
+    }
+  });
+
+  $scope.schoolNames = [];
+  for (var schoolName in schools) {
+    $scope.schoolNames.push(schoolName);
+  }
+
   $scope.fieldsNames = {
     ch: "Ciências Humanas",
     cn: "Ciências da Natureza",
@@ -7,11 +20,10 @@ inepMicrodataApp.controller("histogramsCtrl", ["$scope", "$location", function($
     mt: "Matemática"
   }
 
-  $scope.changeCity = function() {
-    if ($scope.chosenCity) {
-      $location.path("/escolas/" + $scope.chosenCity);
-    } else {
-      $location.path("/");
+  $scope.changeSchool = function(schoolCode) {
+    schoolCode = schoolCode || $scope.selectedSchool;
+    if (schoolCode) {
+      $location.path("/escolas/" + schoolCode);
     }
   }
 
@@ -21,10 +33,10 @@ inepMicrodataApp.controller("histogramsCtrl", ["$scope", "$location", function($
     $scope.state = {};
   };
 
-  $scope.resetInstitutions();
-
-  $scope.updateChosenCity = function(code) {
-    $scope.chosenCity = code;
+  $scope.updateSelectedSchool = function(code) {
+    $scope.selectedSchool = code;
   }
+
+  $scope.resetInstitutions();
 
 }]);

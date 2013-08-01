@@ -6,11 +6,14 @@
   <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   <script type="text/javascript" src="http://code.angularjs.org/1.0.7/angular-resource.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js"></script>
   <script type="text/javascript" src="/static/js/inep-microdata.js"></script>
   <script type="text/javascript" src="/static/js/services/score_sheet.js"></script>
   <script type="text/javascript" src="/static/js/controllers/histograms_controller.js"></script>
   <script type="text/javascript" src="/static/js/controllers/graphics_controller.js"></script>
+
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 
@@ -20,17 +23,16 @@
 <h2>{{city.name}} / {{city.state}}</h2>
 
 <div class="city-selector">
-  <label for="select_city">Escolha sua cidade</label>
-  <select id="select_city" ng-model="chosenCity" ng-change="changeCity()">
-    <option value="">Selecione sua escola</option>
-    {% for school in schools %}
-      <option value="{{school.code}}">{{school.name}}</option>
-    {% endfor %}
-  </select>
+  <label for="input_school">Escola: </label>
+  <input id="input_school" auto-complete ui-items="schoolNames" ng-model="selectedSchool" placeholder="digite o nome da sua escola">
 </div>
 
 <section ng-view>
 </section>
+
+<script type="text/javascript">
+  var schools = {{schools}}
+</script>
 
 </body>
 </html>

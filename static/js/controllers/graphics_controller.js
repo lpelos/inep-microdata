@@ -1,6 +1,5 @@
 inepMicrodataApp.controller("graphicsCtrl", ["$scope", "$routeParams", "ScoreSheet", function($scope, $routeParams, ScoreSheet) {
   $scope.schoolCode = $routeParams.schoolCode || "";
-  $scope.updateChosenCity($scope.schoolCode);
   getScores();
 
   function getScores() {
@@ -13,6 +12,7 @@ inepMicrodataApp.controller("graphicsCtrl", ["$scope", "$routeParams", "ScoreShe
       if (data.error) { $scope.error = data.error; return }
 
       $scope.schoolName = data.name;
+      $scope.updateSelectedSchool($scope.schoolName);
       populateInstitutionData($scope.school, data.school_scores);
       populateInstitutionData($scope.city, data.city_scores);
       populateInstitutionData($scope.state, data.state_scores);

@@ -3,7 +3,7 @@ h1, h2, .city-selector {
   text-align: center;
 }
 
-#select_city, #s2id_select_city {
+#input_school {
   width: 650px;
 }
 
@@ -23,6 +23,12 @@ h1, h2, .city-selector {
 
 .graphic {
   width: 100%;
+}
+
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  width: 650px;
 }
 
 @media (min-width: 800px) {
