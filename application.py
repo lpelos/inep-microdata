@@ -11,40 +11,40 @@ def root():
 
 @app.route('/histograms/<state_acronym>/cities/<city_code>', methods=["GET"])
 @app.route('/histogramas/<state_acronym>/cidades/<city_code>', methods=["GET"])
-def histograms(year=2011, state_acronym="SP", city_code="3550308"):
+def histograms(state_acronym="SP", city_code="3550308"):
     city = City.objects.get(code=city_code)
-    schools = [{"code": school.code, "name": school.name} for school in
-        School.objects(city=city).order_by('name')]
+
+    schools = School.objects(
+        city=city, score_sheets__exists=True).order_by('name')
+
+    schools_index = [{"code": school.code, "name": school.name}
+        for school in schools]
 
     return render_template("histograms/index.jinja2",
-        city={"name": city.name, "state":city.state.acronym}, schools=schools)
+        city={"name": city.name, "state":city.state.acronym},
+        schools=schools_index)
 
 
-@app.route('/api/histograms/<int:year>/schools/<school_code>', methods=["GET"])
-def histograms_school(school_code, year=2011):
+@app.route('/api/histograms/<year>/schools/<school_code>', methods=["GET"])
+def histograms_school(school_code, year="2011"):
+    def scores_obj(fields):
+        score_obj = {"absolute": fields, "relative": {}}
+
+        for field in fields:
+            total = sum(fields[field])
+            score_obj["relative"][field] = [score*100/total for score in fields[field]]
+
+        return score_obj
+
     try:
         school = School.objects.get(code=school_code)
         city = school.city
         state = school.state
 
-        def scores_obj(fields):
-            score_obj = {"absolute": fields, "relative": {}}
+        school_scores = scores_obj(school.score_sheets[year].fields)
+        city_scores = scores_obj(city.score_sheets[year].fields)
 
-            for field in fields:
-                total = sum(fields[field])
-                score_obj["relative"][field] = [score*100/total for score in fields[field]]
-
-            return score_obj
-
-        school_scores = scores_obj(ScoreSheet.objects.get(
-            year=year, ref=school).fields)
-
-        city_scores = scores_obj(ScoreSheet.objects.get(
-            year=year, ref=city).fields)
-        
-        state_scores = scores_obj(ScoreSheet.objects.get(
-            year=year, ref=state).fields)
-
+        state_scores = scores_obj(state.score_sheets[year].fields)
 
         return jsonify({
             "year": year,
