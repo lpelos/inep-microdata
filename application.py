@@ -59,7 +59,6 @@ def histograms_school(school_code, year="2011"):
         })
 
     except KeyError:
-        # to-do: retornar resposta http adequada
         return jsonify({"error": "Sem dados para esta instituicao"})
 
 
