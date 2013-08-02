@@ -14,10 +14,13 @@ def root():
 def histograms(state_acronym="SP", city_code="3550308"):
     city = City.objects.get(code=city_code)
 
+    # to-do: descobrir como fazer query que traga apenas os registros que
+    # contenham qualquer chave em score_sheets, como score_sheets__exists
+    # (que não funciona)
     schools = School.objects(
-        city=city, score_sheets__exists=True).order_by('name')
+        city=city, score_sheets__2011__exists=True).order_by('name')
 
-    schools_index = {str(school.name): str(school.code) for school in schools}
+    schools_index = {school.name.encode('ascii', 'ignore'): str(school.code) for school in schools}
 
     return render_template("histograms/index.jinja2",
         city={"name": city.name, "state":city.state.acronym},
@@ -26,6 +29,7 @@ def histograms(state_acronym="SP", city_code="3550308"):
 
 @app.route('/api/histograms/<year>/schools/<school_code>', methods=["GET"])
 def histograms_school(school_code, year="2011"):
+
     def scores_obj(fields):
         score_obj = {"absolute": fields, "relative": {}}
 
@@ -54,7 +58,7 @@ def histograms_school(school_code, year="2011"):
             "state_scores": state_scores
         })
 
-    except DoesNotExist:
+    except KeyError:
         # to-do: retornar resposta http adequada
         return jsonify({"error": "Sem dados para esta instituicao"})
 
