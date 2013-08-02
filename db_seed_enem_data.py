@@ -12,7 +12,8 @@ def clear_score_count(year):
     collections = [State, City, School]
     for institution in collections:
         for institution in institution.objects(**{year_key: True}):
-            institution.score_sheets.clear()
+            del institution.score_sheets[year]
+            institution.save()
 
 def get_or_create_score_sheet(institution, year, fields):
     if not institution.score_sheets.get(year):
